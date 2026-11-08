@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Cookies Jo'ckies : compose ta box de 4, 6 ou 8 cookies généreux, à retirer à Lille. Paiement PayPal ou Wero.">
+<meta property="og:title" content="Jo'ckies — Compose ta box de cookies">
+<meta property="og:description" content="Box de 4, 6 ou 8 cookies généreux à retirer à Lille.">
+<meta property="og:image" content="img/hero.jpg">
+<link rel="icon" type="image/png" href="img/logo.png">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Jo'ckies — Compose ta box de cookies à Lille</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout : bandeau info + en-tête collant, photo principale pleine largeur, box à composer, cookies à l'unité, FAQ, pied de page brun. Identité Jo'ckies (un seul thème clair, volontaire). */
+:root {
+  color-scheme: light;
+  --bg: oklch(97.5% .014 80);
+  --fg: oklch(27% .045 45);
+  --card: oklch(99% .008 80);
+  --primary: oklch(33% .06 42);
+  --on-primary: oklch(97% .015 80);
+  --caramel: oklch(68% .13 60);
+  --on-caramel: oklch(22% .04 45);
+  --cream: oklch(96% .025 82);
+  --accent: oklch(90% .05 70);
+  --muted: oklch(50% .04 50);
+  --border: oklch(88% .03 70);
+  --whatsapp: oklch(72% .19 145);
+  --danger: oklch(55% .2 27);
+  --warm: linear-gradient(135deg, var(--cream), var(--accent));
+  --shadow: 0 20px 40px -20px oklch(33% .06 42 / .55);
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius: 1rem;
+  --wrap: 1200px;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--primary); }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--caramel); outline-offset: 2px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+.price { font-variant-numeric: tabular-nums; }
+
+/* Bandeau + en-tête */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; }
+.infobar { background: var(--primary); color: var(--on-primary); font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; text-align: center; padding-block: .5rem; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+header { background: oklch(97.5% .014 80 / .88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid oklch(88% .03 70 / .6); }
+header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: .75rem; }
+.logo { display: block; line-height: 0; }
+.logo img { height: 40px; width: auto; }
+.logo-text { font-family: var(--display); font-size: 1.6rem; font-weight: 700; color: oklch(60% .17 30); line-height: 1; text-decoration: none; }
+nav { display: flex; align-items: center; gap: 1.5rem; font-size: .92rem; font-weight: 500; }
+nav a { text-decoration: none; }
+nav a.link:hover, nav a.link[aria-current="page"] { color: var(--caramel); }
+.cart-btn { display: inline-flex; align-items: center; gap: .5rem; background: var(--primary); color: var(--on-primary); padding: .55rem 1.1rem; border-radius: 999px; font-weight: 600; }
+.cart-btn svg { width: 16px; height: 16px; }
+.cart-count { background: var(--caramel); color: var(--on-caramel); min-width: 1.35rem; height: 1.35rem; border-radius: 999px; display: inline-grid; place-items: center; font-size: .75rem; font-weight: 700; padding: 0 .3rem; }
+@media (max-width: 560px) { nav { gap: .9rem; font-size: .85rem; } nav .link-cookies { display: none; } .logo img { height: 34px; } }
+
+/* Photo principale pleine largeur */
+.hero { position: relative; width: 100%; height: clamp(440px, 68vh, 720px); overflow: hidden; background: oklch(55% .16 28); }
+.hero img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center 45%; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, oklch(20% .04 40 / .55) 100%), linear-gradient(90deg, oklch(20% .04 40 / .35), transparent 60%); }
+.hero-content { position: absolute; inset: auto 0 0 0; z-index: 1; padding-bottom: clamp(2rem, 6vw, 4rem); }
+.hero h1 { color: var(--on-primary); font-size: clamp(2.4rem, 7vw, 4.5rem); letter-spacing: -.01em; text-transform: uppercase; line-height: 1; text-shadow: 0 2px 24px oklch(20% .04 40 / .35); }
+.hero p { color: var(--on-primary); margin-top: .75rem; font-size: 1.05rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border: 0; border-radius: 999px; background: var(--caramel); color: var(--on-caramel); font-weight: 600; padding: .9rem 1.8rem; text-decoration: none; box-shadow: var(--shadow); transition: transform .15s ease, filter .15s ease; }
+.btn:hover { transform: translateY(-1px); filter: brightness(1.04); }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-sm { padding: .45rem .9rem; font-size: .82rem; box-shadow: none; border-radius: .6rem; }
+.btn-dark { background: var(--primary); color: var(--on-primary); }
+.hero .btn { margin-top: 1.5rem; }
+
+/* Bandeau défilant */
+.marquee { background: var(--caramel); color: var(--on-caramel); overflow: hidden; white-space: nowrap; padding-block: .9rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; font-size: clamp(.85rem, 1.6vw, 1.05rem); }
+.marquee-track { display: inline-flex; animation: slide 30s linear infinite; }
+.marquee-track span { padding-right: 1.2rem; }
+@keyframes slide { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+section { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+.panel { background: var(--warm); border-radius: 1.5rem; box-shadow: var(--shadow); padding: clamp(1.25rem, 3vw, 2rem); }
+.big-title { font-size: clamp(1.9rem, 4.5vw, 3rem); text-transform: uppercase; letter-spacing: -.01em; margin-bottom: 1.5rem; }
+
+/* Box */
+.box h2 { font-size: clamp(1.5rem, 3vw, 1.9rem); }
+.box .note { font-size: .9rem; color: var(--muted); margin-top: .35rem; }
+.sizes { display: flex; flex-wrap: wrap; gap: .6rem; margin-block: 1.25rem; }
+.size { border: 1px solid var(--border); background: var(--card); border-radius: .8rem; padding: .6rem 1rem; font-weight: 600; font-size: .9rem; }
+.size[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
+@media (max-width: 1100px) { .picks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .picks { grid-template-columns: 1fr; } }
+.pick { display: flex; align-items: center; gap: .55rem; background: var(--card); border-radius: .9rem; padding: .6rem; border: 1px solid oklch(88% .03 70 / .6); min-width: 0; }
+.pick img { width: 44px; height: 44px; border-radius: .6rem; object-fit: cover; flex: none; }
+.pick-name { flex: 1; min-width: 0; font-weight: 600; font-size: .88rem; line-height: 1.2; white-space: nowrap; }
+.pick-name small { display: block; color: var(--caramel); font-weight: 600; font-size: .78rem; margin-top: .15rem; }
+.stepper { display: inline-flex; align-items: center; gap: .15rem; flex: none; }
+.stepper button { width: 28px; height: 28px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); display: grid; place-items: center; font-size: 1rem; line-height: 1; padding: 0; }
+.stepper button:disabled { opacity: .35; cursor: not-allowed; }
+.stepper output { min-width: 1.6rem; text-align: center; font-weight: 600; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.box-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; }
+.box-status { font-weight: 600; }
+.box-status .price { color: var(--caramel); }
+
+/* À l'unité */
+.units { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 760px) { .units { grid-template-columns: 1fr; } }
+.unit { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 1rem; background: var(--card); border-radius: 1.1rem; padding: 1rem; border: 1px solid oklch(88% .03 70 / .5); }
+.unit img { width: 76px; height: 76px; border-radius: .9rem; object-fit: cover; }
+.unit-head { display: flex; justify-content: space-between; gap: .5rem; align-items: baseline; }
+.unit h3 { font-size: 1.05rem; }
+.unit-head .price { color: var(--caramel); font-weight: 600; white-space: nowrap; }
+.unit p { color: var(--muted); font-size: .88rem; margin-top: .25rem; }
+.unit-actions { display: flex; align-items: center; gap: .75rem; margin-top: .75rem; }
+
+/* Photos */
+.duo { display: grid; grid-template-columns: 1fr; padding-block: 0; }
+.duo img { width: 100%; max-width: 100%; aspect-ratio: 16 / 7; object-fit: cover; object-position: center 55%; border-radius: 1.5rem; display: block; }
+@media (max-width: 600px) { .duo img { aspect-ratio: 4 / 3; } }
+
+/* FAQ */
+.faq h2 { text-align: center; font-size: clamp(1.7rem, 3.5vw, 2.2rem); margin-bottom: 1.75rem; }
+.faq-list { max-width: 720px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 1.25rem; overflow: hidden; }
+.faq details + details { border-top: 1px solid var(--border); }
+.faq summary { list-style: none; padding: 1.1rem 1.25rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; gap: 1rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--caramel); font-size: 1.3rem; line-height: 1; transition: transform .2s; }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { padding: 0 1.25rem 1.1rem; color: var(--muted); }
+.faq details a { color: var(--fg); font-weight: 600; }
+.center { text-align: center; margin-top: 2rem; }
+
+/* Pied de page */
+footer { background: var(--primary); color: var(--on-primary); padding-block: 3rem 2.5rem; margin-top: 2rem; }
+footer .wrap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
+@media (max-width: 700px) { footer .wrap { grid-template-columns: 1fr; } }
+footer h3 { font-size: 1.5rem; }
+footer h4 { margin: 0 0 .35rem; font-size: .9rem; font-weight: 600; }
+footer p, footer a { font-size: .9rem; opacity: .9; }
+
+/* WhatsApp flottant */
+.wa-float { position: fixed; z-index: 40; right: calc(1.25rem + env(safe-area-inset-right, 0px)); bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)); width: 56px; height: 56px; border-radius: 999px; background: var(--whatsapp); display: grid; place-items: center; box-shadow: 0 10px 25px -8px oklch(40% .12 145 / .6); }
+.wa-float svg { width: 28px; height: 28px; fill: #fff; }
+
+/* Toast */
+.toast { position: fixed; z-index: 70; left: 50%; bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 1rem); background: var(--primary); color: var(--on-primary); padding: .75rem 1.25rem; border-radius: 999px; font-weight: 600; font-size: .9rem; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Pages internes */
+.page { padding-block: clamp(2.5rem, 6vw, 4rem); min-height: 50vh; }
+.page-title { font-size: clamp(2rem, 5vw, 3rem); }
+.custom { max-width: 760px; margin: 0 auto; }
+.custom .page-title { text-align: center; text-transform: uppercase; }
+.custom .lead { text-align: center; color: var(--muted); margin: 1rem auto 2rem; max-width: 60ch; }
+.form-card h2 { font-size: 1.5rem; margin-bottom: 1.25rem; }
+.fields { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: .35rem; grid-column: span 6; min-width: 0; }
+.field.half { grid-column: span 3; }
+.field.third { grid-column: span 2; }
+@media (max-width: 600px) { .field.half, .field.third { grid-column: span 6; } }
+label { font-size: .85rem; font-weight: 600; }
+input, textarea { font: inherit; font-size: .95rem; color: var(--fg); background: var(--card); border: 1px solid var(--border); border-radius: .75rem; padding: .65rem .85rem; width: 100%; }
+textarea { min-height: 110px; resize: vertical; }
+input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset: 0; border-color: var(--caramel); }
+.invalid { border-color: var(--danger); }
+.err { color: var(--danger); font-size: .8rem; }
+.form-foot { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
+.form-foot .btn { width: 100%; }
+.small { font-size: .85rem; color: var(--muted); text-align: center; }
+
+.cart-layout { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+@media (max-width: 860px) { .cart-layout { grid-template-columns: 1fr; } }
+.lines { display: flex; flex-direction: column; gap: .75rem; margin-top: 1.5rem; }
+.line { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto auto auto; align-items: center; gap: .9rem; background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: .75rem 1rem; }
+.line img { width: 56px; height: 56px; border-radius: .75rem; object-fit: cover; }
+.line-name { font-weight: 600; }
+.line-sub { font-size: .8rem; color: var(--muted); }
+.line-total { font-weight: 600; min-width: 4.5rem; text-align: right; }
+.icon-btn { border: 0; background: none; padding: .35rem; color: var(--muted); border-radius: .5rem; }
+.icon-btn:hover { color: var(--danger); }
+.icon-btn svg { width: 18px; height: 18px; display: block; }
+@media (max-width: 520px) {
+  .line { grid-template-columns: 48px minmax(0, 1fr) auto; }
+  .line img { width: 48px; height: 48px; }
+  .line .stepper { grid-column: 2; }
+  .line .line-total { grid-column: 3; grid-row: 1; }
+  .line .icon-btn { grid-column: 3; grid-row: 2; justify-self: end; }
+}
+.total-row { display: flex; justify-content: space-between; padding: 1rem .25rem; font-size: 1.1rem; font-weight: 600; }
+.total-row .price { color: var(--caramel); }
+.pay-box { border: 2px solid var(--caramel); background: var(--card); border-radius: 1rem; padding: 1rem; display: flex; flex-direction: column; gap: .6rem; margin-top: 1rem; }
+.pay-box strong { font-size: .95rem; }
+.pay-box p { font-size: .85rem; color: var(--muted); }
+.empty { text-align: center; padding-block: 4rem; }
+.empty p { color: var(--muted); margin: .75rem 0 1.75rem; }
+.done { text-align: center; }
+.done p { color: var(--muted); margin-top: .5rem; }
+</style>
+</head>
+<body>
+
+
+<div class="top">
+  <div class="infobar">Click &amp; collect à Lille · Paiement PayPal, Wero ou espèces · Préparés à la commande</div>
+  <header>
+    <div class="wrap">
+      <a class="logo" href="#accueil" aria-label="Jo'ckies, accueil"><img src="img/logo.png" alt="Jo'ckies home cookies" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'logo-text',textContent:'jo’ckies'}))"></a>
+      <nav>
+        <a class="link link-cookies" href="#cookies">Nos cookies</a>
+        <a class="link" href="#sur-mesure" data-view-link="sur-mesure">Sur mesure</a>
+        <a class="cart-btn" href="#panier" aria-label="Panier">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Panier <span class="cart-count" id="cartCount" hidden>0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+</div>
+
+<main id="view-home">
+  <div class="hero">
+    <img src="img/hero.jpg" alt="Cookies Jo'ckies tenus en main">
+    <div class="hero-content">
+      <div class="wrap">
+        <h1>Compose ta box</h1>
+        <p>4, 6 ou 8 cookies de 100 g · dès 13,50 €</p>
+        <a class="btn" href="#box">Je compose ma box</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+
+  <section id="box-section" class="box">
+    <div class="wrap">
+      <div class="panel">
+        <h2>Compose ta box à cookies</h2>
+        <p class="note">+0,50 € pour chaque Pistache ou Cookie Misu ajouté à la box.</p>
+        <div class="sizes" id="sizes" role="group" aria-label="Taille de la box"></div>
+        <div class="picks" id="picks"></div>
+        <div class="box-foot">
+          <div class="box-status" id="boxStatus"></div>
+          <button class="btn" id="addBox" disabled>Ajouter la box au panier</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cookies-section">
+    <div class="wrap">
+      <h2 class="big-title">Les cookies à l'unité</h2>
+      <div class="panel"><div class="units" id="units"></div></div>
+    </div>
+  </section>
+
+  <section class="duo-section" style="padding-block: 0">
+    <div class="wrap duo">
+      <img src="img/bueno.jpg" alt="Cookies Bueno">
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <h2>FAQ</h2>
+      <div class="faq-list">
+        <details><summary>Comment passer commande ?</summary><p>Compose ta box ou choisis tes cookies à l'unité, laisse ton nom et ton téléphone, puis règle par PayPal ou Wero pour valider ta commande.</p></details>
+        <details><summary>Une question avant de commander ?</summary><p>Écris-moi sur le numéro WhatsApp du site, je te réponds moi-même. <a href="https://wa.me/33615888368?text=Bonjour%20Jo%27ckies%20!%20J%27ai%20une%20question%20avant%20de%20commander." target="_blank" rel="noopener">M'écrire sur WhatsApp</a> (06 15 88 83 68)</p></details>
+        <details><summary>Où et quand je récupère ma commande ?</summary><p>À Lille. Je t'envoie les infos de retrait par SMS une fois la commande validée.</p></details>
+        <details><summary>Combien de temps se conservent les cookies ?</summary><p>3 à 4 jours dans une boîte hermétique. Passe-les 5 min au four pour un cœur fondant.</p></details>
+        <details><summary>Peut-on congeler les cookies ?</summary><p>Oui ! Jusqu'à 1 mois au congélateur, puis réchauffe-les quelques minutes au four.</p></details>
+      </div>
+      <div class="center"><a class="btn" href="#panier">Voir mon panier</a></div>
+    </div>
+  </section>
+</main>
+
+<main id="view-sur-mesure" hidden>
+  <div class="wrap page custom">
+    <h1 class="page-title">Sur mesure</h1>
+    <p class="lead">Une occasion spéciale ? Je prépare des cookies en grande quantité, personnalisés pour votre événement. Dites-moi ce qui vous amène, je vous réponds avec un devis.</p>
+    <form class="panel form-card" id="customForm" novalidate>
+      <h2>Votre projet</h2>
+      <div class="fields">
+        <div class="field half"><label for="cName">Nom complet *</label><input id="cName" autocomplete="name" required></div>
+        <div class="field half"><label for="cPhone">Téléphone *</label><input id="cPhone" type="tel" autocomplete="tel" required></div>
+        <div class="field"><label for="cEmail">E-mail (facultatif)</label><input id="cEmail" type="email" autocomplete="email"></div>
+        <div class="field third"><label for="cType">Type d'événement</label><input id="cType" placeholder="Précisez votre événement"></div>
+        <div class="field third"><label for="cQty">Quantité estimée</label><input id="cQty" placeholder="ex. 50 cookies"></div>
+        <div class="field third"><label for="cDate">Date souhaitée</label><input id="cDate" type="date"></div>
+        <div class="field"><label for="cProject">Votre projet *</label><textarea id="cProject" placeholder="Décrivez votre événement, les saveurs souhaitées, le style, le budget…" required></textarea></div>
+      </div>
+      <div class="form-foot">
+        <p class="err" id="customErr" hidden>Merci de remplir votre nom, votre téléphone et votre projet.</p>
+        <a class="btn" id="customSend" href="#" target="_blank" rel="noopener">Envoyer ma demande sur WhatsApp</a>
+        <p class="small">Réponse par SMS ou e-mail sous 48 h.</p>
+      </div>
+    </form>
+  </div>
+</main>
+
+<main id="view-panier" hidden>
+  <div class="wrap page" id="cartRoot"></div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><h3>Jo'ckies</h3><p>Cookies faits maison à Lille.</p></div>
+    <div><h4>Retrait</h4><p>Lille — infos de retrait envoyées par SMS</p></div>
+    <div><h4>Une question ?</h4><p><a href="https://wa.me/33615888368?text=Bonjour%20Jo%27ckies%20!%20J%27ai%20une%20question%20sur%20mes%20cookies." target="_blank" rel="noopener">Écris-moi sur WhatsApp</a><br>06 15 88 83 68</p></div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/33615888368?text=Bonjour%20Jo%27ckies%20!%20J%27aimerais%20commander%20des%20cookies." target="_blank" rel="noopener" aria-label="Discuter sur WhatsApp">
+  <svg viewBox="0 0 32 32"><path d="M16 3C9 3 3.3 8.6 3.3 15.6c0 2.4.7 4.7 1.9 6.7L3 29l6.9-2.1c1.9 1 4 1.6 6.1 1.6 7 0 12.7-5.6 12.7-12.6S23 3 16 3zm0 23c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.1 1.2 1.2-4-.3-.4c-1.1-1.7-1.7-3.6-1.7-5.6C5.3 9.8 10.1 5.1 16 5.1s10.7 4.7 10.7 10.5S21.9 26 16 26zm5.9-7.8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1c-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2s0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.1-1.2 2.8 1.2 3.3 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
+</a>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const WA = '33615888368';
+  const PAYPAL = 'https://www.paypal.me/joellenk27';
+  const COOKIES = [
+    { id: 'lait', name: 'Chocolat au lait', price: 3.5, extra: 0, img: 'img/c0.jpg', desc: 'Cookie généreux aux pépites de chocolat au lait.' },
+    { id: 'speculoos', name: 'Spéculoos', price: 3.5, extra: 0, img: 'img/c1.jpg', desc: 'Cookie au spéculoos et sa pâte de spéculoos fondante.' },
+    { id: 'bueno', name: 'Cookie Bueno', price: 3.5, extra: 0, img: 'img/c2.jpg', desc: "Cookie gourmand garni d'un morceau de Bueno." },
+    { id: 'noir', name: 'Chocolat Noir', price: 3.5, extra: 0, img: 'img/c3.jpg', desc: 'Cookie cacao aux gros éclats de chocolat noir.' },
+    { id: 'apple', name: 'Apple Crumble', price: 3.5, extra: 0, img: 'img/c4.jpg', desc: 'Cookie pomme caramélisée façon crumble, épicé.' },
+    { id: 'redvelvet', name: 'Red Velvet', price: 3.5, extra: 0, img: 'img/c5.jpg', desc: 'Cookie red velvet aux pépites de chocolat blanc.' },
+    { id: 'pistache', name: 'Choco Pistache', price: 4, extra: 0.5, img: 'img/c6.jpg', desc: 'Cookie chocolat garni de crème et éclats de pistache.' },
+    { id: 'misu', name: 'Cookie Misu', price: 4, extra: 0.5, img: 'img/c7.jpg', desc: 'Cookie façon tiramisu, notes de café, cœur crémeux et cacao.' }
+  ];
+  const BOXES = [ { size: 4, price: 13.5 }, { size: 6, price: 20 }, { size: 8, price: 26 } ];
+  const byId = Object.fromEntries(COOKIES.map(c => [c.id, c]));
+  const $ = s => document.querySelector(s);
+  const fmt = n => n.toFixed(2).replace('.', ',') + ' €';
+  const esc = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  const waLink = text => 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text);
+
+  /* ---------- Panier (gardé dans le navigateur du client) ---------- */
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('jockies-cart') || '[]'); if (!Array.isArray(cart)) cart = []; } catch (e) { cart = []; }
+  const save = () => { try { localStorage.setItem('jockies-cart', JSON.stringify(cart)); } catch (e) {} updateCount(); };
+  const linePrice = l => l.type === 'unit' ? byId[l.id].price : l.price;
+  const cartTotal = () => cart.reduce((s, l) => s + linePrice(l) * l.qty, 0);
+  function updateCount() {
+    const n = cart.reduce((s, l) => s + l.qty, 0);
+    const el = $('#cartCount'); el.textContent = n; el.hidden = n === 0;
+  }
+  function addLine(line) {
+    const found = cart.find(l => l.key === line.key);
+    if (found) found.qty += line.qty; else cart.push(line);
+    save();
+  }
+  let toastTimer;
+  function toast(msg) {
+    const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  /* ---------- Bandeau défilant ---------- */
+  const words = ['Ultra fondant', '100 g de gourmandise', 'Fait maison'];
+  const run = Array(4).fill(words).flat().map(w => '<span>' + w + ' ·</span>').join('');
+  $('#marquee').innerHTML = run + run;
+
+  /* ---------- Box ---------- */
+  let boxSize = 4; const picks = {};
+  COOKIES.forEach(c => picks[c.id] = 0);
+  const boxCount = () => Object.values(picks).reduce((a, b) => a + b, 0);
+  const boxPrice = () => BOXES.find(b => b.size === boxSize).price + COOKIES.reduce((s, c) => s + c.extra * picks[c.id], 0);
+
+  $('#sizes').innerHTML = BOXES.map(b => `<button type="button" class="size" data-size="${b.size}">Box de ${b.size} · ${fmt(b.price)}</button>`).join('');
+  $('#picks').innerHTML = COOKIES.map(c => `
+    <div class="pick">
+      <img src="${c.img}" alt="${esc(c.name)}" loading="lazy">
+      <div class="pick-name">${esc(c.name)}${c.extra ? `<small>+${fmt(c.extra)}</small>` : ''}</div>
+      <div class="stepper">
+        <button type="button" data-pick="${c.id}" data-d="-1" aria-label="Retirer un ${esc(c.name)}">−</button>
+        <output id="pick-${c.id}">0</output>
+        <button type="button" data-pick="${c.id}" data-d="1" aria-label="Ajouter un ${esc(c.name)}">+</button>
+      </div>
+    </div>`).join('');
+
+  function renderBox() {
+    document.querySelectorAll('.size').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.size === boxSize)));
+    const n = boxCount();
+    COOKIES.forEach(c => $('#pick-' + c.id).textContent = picks[c.id]);
+    document.querySelectorAll('[data-pick]').forEach(b => {
+      b.disabled = b.dataset.d === '1' ? n >= boxSize : picks[b.dataset.pick] === 0;
+    });
+    $('#boxStatus').innerHTML = `${n} / ${boxSize} cookies · <span class="price">${fmt(boxPrice())}</span>`;
+    $('#addBox').disabled = n !== boxSize;
+  }
+  $('#sizes').addEventListener('click', e => {
+    const b = e.target.closest('.size'); if (!b) return;
+    boxSize = +b.dataset.size;
+    // si on réduit la taille, on retire des cookies en partant de la fin
+    let over = boxCount() - boxSize;
+    for (let i = COOKIES.length - 1; i >= 0 && over > 0; i--) {
+      const id = COOKIES[i].id; const take = Math.min(picks[id], over); picks[id] -= take; over -= take;
+    }
+    renderBox();
+  });
+  $('#picks').addEventListener('click', e => {
+    const b = e.target.closest('[data-pick]'); if (!b || b.disabled) return;
+    picks[b.dataset.pick] = Math.max(0, picks[b.dataset.pick] + +b.dataset.d);
+    renderBox();
+  });
+  $('#addBox').addEventListener('click', () => {
+    if (boxCount() !== boxSize) return;
+    const comp = COOKIES.filter(c => picks[c.id] > 0).map(c => [c.id, picks[c.id]]);
+    addLine({ key: 'b:' + boxSize + ':' + comp.map(x => x.join('x')).join(','), type: 'box', size: boxSize, comp, price: boxPrice(), qty: 1 });
+    COOKIES.forEach(c => picks[c.id] = 0);
+    renderBox();
+    toast('Box de ' + boxSize + ' ajoutée au panier');
+  });
+  renderBox();
+
+  /* ---------- À l'unité ---------- */
+  const unitQty = {};
+  $('#units').innerHTML = COOKIES.map(c => { unitQty[c.id] = 1; return `
+    <article class="unit">
+      <img src="${c.img}" alt="${esc(c.name)}" loading="lazy">
+      <div>
+        <div class="unit-head"><h3>${esc(c.name)}</h3><span class="price">${fmt(c.price)}</span></div>
+        <p>${esc(c.desc)}</p>
+        <div class="unit-actions">
+          <div class="stepper">
+            <button type="button" data-unit="${c.id}" data-d="-1" aria-label="Moins">−</button>
+            <output id="unit-${c.id}">1</output>
+            <button type="button" data-unit="${c.id}" data-d="1" aria-label="Plus">+</button>
+          </div>
+          <button type="button" class="btn btn-sm" data-add="${c.id}">Ajouter</button>
+        </div>
+      </div>
+    </article>`; }).join('');
+  $('#units').addEventListener('click', e => {
+    const s = e.target.closest('[data-unit]');
+    if (s) { const id = s.dataset.unit; unitQty[id] = Math.max(1, Math.min(50, unitQty[id] + +s.dataset.d)); $('#unit-' + id).textContent = unitQty[id]; return; }
+    const a = e.target.closest('[data-add]');
+    if (a) {
+      const id = a.dataset.add;
+      addLine({ key: 'u:' + id, type: 'unit', id, qty: unitQty[id] });
+      toast(unitQty[id] + ' × ' + byId[id].name + ' ajouté au panier');
+      unitQty[id] = 1; $('#unit-' + id).textContent = 1;
+    }
+  });
+
+  /* ---------- Page panier ---------- */
+  const form = { name: '', phone: '', email: '', comment: '' };
+  let showErrors = false, sent = false;
+  const lineLabel = l => l.type === 'unit' ? byId[l.id].name : 'Box de ' + l.size;
+  const lineSub = l => l.type === 'unit' ? fmt(byId[l.id].price) + ' / pièce'
+    : l.comp.map(([id, n]) => n + ' ' + byId[id].name).join(', ') + ' · ' + fmt(l.price);
+  const lineImg = l => l.type === 'unit' ? byId[l.id].img : byId[l.comp[0][0]].img;
+
+  function orderMessage() {
+    const lines = cart.map(l => '• ' + l.qty + ' × ' + lineLabel(l) + (l.type === 'box' ? ' (' + l.comp.map(([id, n]) => n + ' ' + byId[id].name).join(', ') + ')' : '') + ' : ' + fmt(linePrice(l) * l.qty));
+    return ["Bonjour Jo'ckies ! Voici ma commande :", '', ...lines, '', 'Total : ' + fmt(cartTotal()), '',
+      'Nom : ' + form.name.trim(), 'Téléphone : ' + form.phone.trim()].concat(form.email.trim() ? ['E-mail : ' + form.email.trim()] : [])
+      .concat(form.comment.trim() ? ['Commentaire : ' + form.comment.trim()] : []).join('\n');
+  }
+  const formOk = () => form.name.trim() && form.phone.trim();
+
+  function renderCart() {
+    const root = $('#cartRoot');
+    if (sent) {
+      root.innerHTML = `<div class="empty done"><h1 class="page-title">Merci !</h1>
+        <p>Envoie le message préparé dans WhatsApp pour valider ta commande, puis règle ton paiement.<br>Les informations de retrait te seront envoyées par SMS.</p>
+        <a class="btn" href="#accueil" id="backHome">Retour à l'accueil</a></div>`;
+      $('#backHome').addEventListener('click', () => { sent = false; });
+      return;
+    }
+    if (!cart.length) {
+      root.innerHTML = `<div class="empty"><h1 class="page-title">Votre panier est vide</h1><p>Il est temps de choisir quelques cookies…</p><a class="btn" href="#cookies">Voir nos cookies</a></div>`;
+      return;
+    }
+    const total = cartTotal();
+    root.innerHTML = `
+      <div class="cart-layout">
+        <div>
+          <h1 class="page-title">Mon panier</h1>
+          <div class="lines">${cart.map((l, i) => `
+            <div class="line">
+              <img src="${lineImg(l)}" alt="">
+              <div style="min-width:0"><div class="line-name">${esc(lineLabel(l))}</div><div class="line-sub">${esc(lineSub(l))}</div></div>
+              <div class="stepper">
+                <button type="button" data-line="${i}" data-d="-1" aria-label="Moins" ${l.qty <= 1 ? 'disabled' : ''}>−</button>
+                <output>${l.qty}</output>
+                <button type="button" data-line="${i}" data-d="1" aria-label="Plus">+</button>
+              </div>
+              <div class="line-total price">${fmt(linePrice(l) * l.qty)}</div>
+              <button type="button" class="icon-btn" data-del="${i}" aria-label="Supprimer ${esc(lineLabel(l))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div>`).join('')}
+          </div>
+          <div class="total-row"><span>Total</span><span class="price">${fmt(total)}</span></div>
+        </div>
+        <form class="panel form-card" id="orderForm" novalidate>
+          <h2>Vos coordonnées</h2>
+          <div class="fields">
+            <div class="field"><label for="oName">Nom complet</label><input id="oName" autocomplete="name" value="${esc(form.name)}" class="${showErrors && !form.name.trim() ? 'invalid' : ''}"></div>
+            <div class="field"><label for="oPhone">Téléphone</label><input id="oPhone" type="tel" autocomplete="tel" value="${esc(form.phone)}" class="${showErrors && !form.phone.trim() ? 'invalid' : ''}"></div>
+            <div class="field"><label for="oEmail">E-mail (facultatif)</label><input id="oEmail" type="email" autocomplete="email" value="${esc(form.email)}"></div>
+            <div class="field"><label for="oComment">Commentaire (facultatif)</label><textarea id="oComment" style="min-height:80px">${esc(form.comment)}</textarea></div>
+          </div>
+          <div class="pay-box">
+            <strong>Pour que votre commande soit validée, merci de régler ${fmt(total)} par PayPal.</strong>
+            <p>Indiquez votre nom dans le message du paiement. Les informations de retrait vous seront envoyées par SMS.</p>
+            <a class="btn btn-sm" style="padding:.7rem 1rem" href="${PAYPAL}/${total.toFixed(2)}EUR" target="_blank" rel="noopener">Payer avec PayPal</a>
+          </div>
+          <div class="form-foot">
+            <p class="err" id="orderErr" ${showErrors && !formOk() ? '' : 'hidden'}>Indique ton nom et ton téléphone pour valider la commande.</p>
+            <a class="btn" id="orderSend" href="${waLink(orderMessage())}" target="_blank" rel="noopener">Valider la commande · ${fmt(total)}</a>
+            <p class="small">La commande s'envoie sur WhatsApp au 06 15 88 83 68.</p>
+          </div>
+        </form>
+      </div>`;
+  }
+  $('#cartRoot').addEventListener('click', e => {
+    const s = e.target.closest('[data-line]');
+    if (s) { const l = cart[+s.dataset.line]; l.qty = Math.max(1, l.qty + +s.dataset.d); save(); renderCart(); return; }
+    const d = e.target.closest('[data-del]');
+    if (d) { cart.splice(+d.dataset.del, 1); save(); renderCart(); return; }
+    const send = e.target.closest('#orderSend');
+    if (send) {
+      if (!formOk()) { e.preventDefault(); showErrors = true; renderCart(); $('#oName').focus(); return; }
+      // on laisse le lien s'ouvrir, puis on vide le panier
+      setTimeout(() => { cart = []; save(); sent = true; showErrors = false; renderCart(); window.scrollTo(0, 0); }, 300);
+    }
+  });
+  $('#cartRoot').addEventListener('input', e => {
+    const map = { oName: 'name', oPhone: 'phone', oEmail: 'email', oComment: 'comment' };
+    const k = map[e.target.id]; if (!k) return;
+    form[k] = e.target.value;
+    e.target.classList.remove('invalid');
+    const a = $('#orderSend'); if (a) a.href = waLink(orderMessage());
+    if (formOk()) { const er = $('#orderErr'); if (er) er.hidden = true; }
+  });
+  $('#cartRoot').addEventListener('submit', e => e.preventDefault());
+
+  /* ---------- Sur mesure ---------- */
+  const cf = id => $('#' + id).value.trim();
+  function customMessage() {
+    const rows = ["Bonjour Jo'ckies ! Demande sur mesure :", '', 'Nom : ' + cf('cName'), 'Téléphone : ' + cf('cPhone')];
+    if (cf('cEmail')) rows.push('E-mail : ' + cf('cEmail'));
+    if (cf('cType')) rows.push('Événement : ' + cf('cType'));
+    if (cf('cQty')) rows.push('Quantité : ' + cf('cQty'));
+    if (cf('cDate')) rows.push('Date souhaitée : ' + new Date(cf('cDate') + 'T12:00').toLocaleDateString('fr-FR'));
+    rows.push('', 'Projet : ' + cf('cProject'));
+    return rows.join('\n');
+  }
+  const customOk = () => cf('cName') && cf('cPhone') && cf('cProject');
+  $('#customForm').addEventListener('input', () => {
+    $('#customSend').href = waLink(customMessage());
+    if (customOk()) $('#customErr').hidden = true;
+    ['cName', 'cPhone', 'cProject'].forEach(id => { if (cf(id)) $('#' + id).classList.remove('invalid'); });
+  });
+  $('#customSend').addEventListener('click', e => {
+    if (!customOk()) {
+      e.preventDefault(); $('#customErr').hidden = false;
+      ['cName', 'cPhone', 'cProject'].forEach(id => $('#' + id).classList.toggle('invalid', !cf(id)));
+      return;
+    }
+    $('#customSend').href = waLink(customMessage());
+  });
+  $('#customForm').addEventListener('submit', e => e.preventDefault());
+
+  /* ---------- Navigation ---------- */
+  const VIEWS = ['home', 'sur-mesure', 'panier'];
+  function route() {
+    const h = location.hash.slice(1);
+    const view = h === 'sur-mesure' ? 'sur-mesure' : h === 'panier' ? 'panier' : 'home';
+    VIEWS.forEach(v => $('#view-' + v).hidden = v !== view);
+    document.querySelectorAll('[data-view-link]').forEach(a => { if (a.dataset.viewLink === view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    if (view === 'panier') renderCart();
+    const target = h === 'box' ? '#box-section' : h === 'cookies' ? '#cookies-section' : null;
+    if (target) {
+      requestAnimationFrame(() => {
+        const el = $(target); const off = $('.top').offsetHeight + 8;
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - off });
+      });
+    } else window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', route);
+  // un clic sur un lien vers la section où l'on est déjà doit quand même défiler
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (a && a.getAttribute('href') === location.hash) { e.preventDefault(); route(); }
+  });
+  updateCount();
+  route();
+})();
+</script>
+
+</body>
+</html>
