@@ -172,9 +172,10 @@ footer p, footer a { font-size: .9rem; opacity: .9; }
 .field.third { grid-column: span 2; }
 @media (max-width: 600px) { .field.half, .field.third { grid-column: span 6; } }
 label { font-size: .85rem; font-weight: 600; }
-input, textarea { font: inherit; font-size: .95rem; color: var(--fg); background: var(--card); border: 1px solid var(--border); border-radius: .75rem; padding: .65rem .85rem; width: 100%; }
+input, textarea, select { font: inherit; font-size: .95rem; color: var(--fg); background: var(--card); border: 1px solid var(--border); border-radius: .75rem; padding: .65rem .85rem; width: 100%; }
 textarea { min-height: 110px; resize: vertical; }
-input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset: 0; border-color: var(--caramel); }
+.hint { font-size: .8rem; color: var(--muted); }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); outline-offset: 0; border-color: var(--caramel); }
 .invalid { border-color: var(--danger); }
 .err { color: var(--danger); font-size: .8rem; }
 .form-foot { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
@@ -214,7 +215,7 @@ input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset:
 
 
 <div class="top">
-  <div class="infobar">Click &amp; collect à Lille · Paiement PayPal, Wero ou espèces · Préparés à la commande</div>
+  <div class="infobar">Click &amp; collect à Lille · Retraits mardi et samedi · Commande 24 h à l'avance</div>
   <header>
     <div class="wrap">
       <a class="logo" href="#accueil" aria-label="Jo'ckies, accueil"><img src="img/logo.png" alt="Jo'ckies home cookies" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'logo-text',textContent:'jo’ckies'}))"></a>
@@ -276,9 +277,10 @@ input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset:
     <div class="wrap">
       <h2>FAQ</h2>
       <div class="faq-list">
-        <details><summary>Comment passer commande ?</summary><p>Compose ta box ou choisis tes cookies à l'unité, laisse ton nom et ton téléphone, puis règle par PayPal ou Wero pour valider ta commande.</p></details>
+        <details><summary>Comment passer commande ?</summary><p>Compose ta box ou choisis tes cookies à l'unité, choisis ton jour de retrait, laisse ton nom et ton téléphone, puis règle par PayPal ou Wero pour valider ta commande. Pense à commander au moins 24 h avant le retrait.</p></details>
         <details><summary>Une question avant de commander ?</summary><p>Écris-moi sur le numéro WhatsApp du site, je te réponds moi-même. <a href="https://wa.me/33615888368?text=Bonjour%20Jo%27ckies%20!%20J%27ai%20une%20question%20avant%20de%20commander." target="_blank" rel="noopener">M'écrire sur WhatsApp</a> (06 15 88 83 68)</p></details>
-        <details><summary>Où et quand je récupère ma commande ?</summary><p>À Lille. Je t'envoie les infos de retrait par SMS une fois la commande validée.</p></details>
+        <details><summary>Où et quand je récupère ma commande ?</summary><p>À Lille, le mardi et le samedi. Je t'envoie les infos de retrait par SMS une fois la commande validée.</p></details>
+        <details><summary>C'est urgent, je peux commander moins de 24 h avant ?</summary><p>Choisis « Commande urgente » dans le panier ou écris-moi sur WhatsApp. Je te confirme si c'est possible et je fais de mon mieux pour te dépanner.</p></details>
         <details><summary>Combien de temps se conservent les cookies ?</summary><p>3 à 4 jours dans une boîte hermétique. Passe-les 5 min au four pour un cœur fondant.</p></details>
         <details><summary>Peut-on congeler les cookies ?</summary><p>Oui ! Jusqu'à 1 mois au congélateur, puis réchauffe-les quelques minutes au four.</p></details>
       </div>
@@ -318,7 +320,7 @@ input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset:
 <footer>
   <div class="wrap">
     <div><h3>Jo'ckies</h3><p>Cookies faits maison à Lille.</p></div>
-    <div><h4>Retrait</h4><p>Lille — infos de retrait envoyées par SMS</p></div>
+    <div><h4>Retrait</h4><p>Lille, le mardi et le samedi<br>Infos de retrait envoyées par SMS</p></div>
     <div><h4>Une question ?</h4><p><a href="https://wa.me/33615888368?text=Bonjour%20Jo%27ckies%20!%20J%27ai%20une%20question%20sur%20mes%20cookies." target="_blank" rel="noopener">Écris-moi sur WhatsApp</a><br>06 15 88 83 68</p></div>
   </div>
 </footer>
@@ -460,7 +462,22 @@ input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset:
   });
 
   /* ---------- Page panier ---------- */
-  const form = { name: '', phone: '', email: '', comment: '' };
+  const form = { name: '', phone: '', email: '', comment: '', day: '' };
+  // Retraits le mardi et le samedi, au moins 24 h à l'avance (repère : midi le jour du retrait)
+  function pickupDays() {
+    const out = []; const min = Date.now() + 24 * 3600e3;
+    const d = new Date(); d.setHours(12, 0, 0, 0);
+    for (let i = 0; i < 28 && out.length < 4; i++) {
+      const day = new Date(d); day.setDate(d.getDate() + i);
+      const wd = day.getDay();
+      if ((wd === 2 || wd === 6) && day.getTime() >= min) {
+        const s = day.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+        out.push(s.charAt(0).toUpperCase() + s.slice(1));
+      }
+    }
+    return out;
+  }
+  const dayLabel = () => form.day === 'urgent' ? 'URGENT, moins de 24 h (à confirmer)' : form.day;
   let showErrors = false, sent = false;
   const lineLabel = l => l.type === 'unit' ? byId[l.id].name : 'Box de ' + l.size;
   const lineSub = l => l.type === 'unit' ? fmt(byId[l.id].price) + ' / pièce'
@@ -470,7 +487,7 @@ input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset:
   function orderMessage() {
     const lines = cart.map(l => '• ' + l.qty + ' × ' + lineLabel(l) + (l.type === 'box' ? ' (' + l.comp.map(([id, n]) => n + ' ' + byId[id].name).join(', ') + ')' : '') + ' : ' + fmt(linePrice(l) * l.qty));
     return ["Bonjour Jo'ckies ! Voici ma commande :", '', ...lines, '', 'Total : ' + fmt(cartTotal()), '',
-      'Nom : ' + form.name.trim(), 'Téléphone : ' + form.phone.trim()].concat(form.email.trim() ? ['E-mail : ' + form.email.trim()] : [])
+      'Retrait : ' + dayLabel(), 'Nom : ' + form.name.trim(), 'Téléphone : ' + form.phone.trim()].concat(form.email.trim() ? ['E-mail : ' + form.email.trim()] : [])
       .concat(form.comment.trim() ? ['Commentaire : ' + form.comment.trim()] : []).join('\n');
   }
   const formOk = () => form.name.trim() && form.phone.trim();
@@ -489,6 +506,8 @@ input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset:
       return;
     }
     const total = cartTotal();
+    const days = pickupDays();
+    if (!form.day || (form.day !== 'urgent' && !days.includes(form.day))) form.day = days[0] || 'urgent';
     root.innerHTML = `
       <div class="cart-layout">
         <div>
@@ -511,6 +530,10 @@ input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset:
         <form class="panel form-card" id="orderForm" novalidate>
           <h2>Vos coordonnées</h2>
           <div class="fields">
+            <div class="field"><label for="oDay">Jour de retrait</label>
+              <select id="oDay">${days.map(o => `<option value="${esc(o)}" ${o === form.day ? 'selected' : ''}>${esc(o)}</option>`).join('')}<option value="urgent" ${form.day === 'urgent' ? 'selected' : ''}>Commande urgente (moins de 24 h)</option></select>
+              <span class="hint">Retraits le mardi et le samedi, commande au moins 24 h avant. Pour une commande urgente, je te confirme sur WhatsApp si c'est possible.</span>
+            </div>
             <div class="field"><label for="oName">Nom complet</label><input id="oName" autocomplete="name" value="${esc(form.name)}" class="${showErrors && !form.name.trim() ? 'invalid' : ''}"></div>
             <div class="field"><label for="oPhone">Téléphone</label><input id="oPhone" type="tel" autocomplete="tel" value="${esc(form.phone)}" class="${showErrors && !form.phone.trim() ? 'invalid' : ''}"></div>
             <div class="field"><label for="oEmail">E-mail (facultatif)</label><input id="oEmail" type="email" autocomplete="email" value="${esc(form.email)}"></div>
@@ -541,14 +564,16 @@ input:focus, textarea:focus { outline: 2px solid var(--caramel); outline-offset:
       setTimeout(() => { cart = []; save(); sent = true; showErrors = false; renderCart(); window.scrollTo(0, 0); }, 300);
     }
   });
-  $('#cartRoot').addEventListener('input', e => {
-    const map = { oName: 'name', oPhone: 'phone', oEmail: 'email', oComment: 'comment' };
+  const onField = e => {
+    const map = { oDay: 'day', oName: 'name', oPhone: 'phone', oEmail: 'email', oComment: 'comment' };
     const k = map[e.target.id]; if (!k) return;
     form[k] = e.target.value;
     e.target.classList.remove('invalid');
     const a = $('#orderSend'); if (a) a.href = waLink(orderMessage());
     if (formOk()) { const er = $('#orderErr'); if (er) er.hidden = true; }
-  });
+  };
+  $('#cartRoot').addEventListener('input', onField);
+  $('#cartRoot').addEventListener('change', onField);
   $('#cartRoot').addEventListener('submit', e => e.preventDefault());
 
   /* ---------- Sur mesure ---------- */
