@@ -174,7 +174,8 @@ footer p, footer a { font-size: .9rem; opacity: .9; }
 label { font-size: .85rem; font-weight: 600; }
 input, textarea, select { font: inherit; font-size: .95rem; color: var(--fg); background: var(--card); border: 1px solid var(--border); border-radius: .75rem; padding: .65rem .85rem; width: 100%; }
 textarea { min-height: 110px; resize: vertical; }
-.hint { font-size: .8rem; color: var(--muted); }
+.notice { background: oklch(95% .035 27); color: oklch(45% .18 27); border: 1.5px solid oklch(72% .14 27); border-radius: .75rem; padding: .7rem .85rem; font-size: .88rem; font-weight: 600; line-height: 1.4; }
+.notice strong { display: block; font-size: .95rem; margin-bottom: .15rem; }
 input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); outline-offset: 0; border-color: var(--caramel); }
 .invalid { border-color: var(--danger); }
 .err { color: var(--danger); font-size: .8rem; }
@@ -297,7 +298,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); o
       <h2>Votre projet</h2>
       <div class="fields">
         <div class="field half"><label for="cName">Nom complet *</label><input id="cName" autocomplete="name" required></div>
-        <div class="field half"><label for="cPhone">Téléphone *</label><input id="cPhone" type="tel" autocomplete="tel" required></div>
+        <div class="field half"><label for="cPhone">Téléphone *</label><input id="cPhone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78" required></div>
         <div class="field"><label for="cEmail">E-mail (facultatif)</label><input id="cEmail" type="email" autocomplete="email"></div>
         <div class="field third"><label for="cType">Type d'événement</label><input id="cType" placeholder="Précisez votre événement"></div>
         <div class="field third"><label for="cQty">Quantité estimée</label><input id="cQty" placeholder="ex. 50 cookies"></div>
@@ -305,7 +306,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); o
         <div class="field"><label for="cProject">Votre projet *</label><textarea id="cProject" placeholder="Décrivez votre événement, les saveurs souhaitées, le style, le budget…" required></textarea></div>
       </div>
       <div class="form-foot">
-        <p class="err" id="customErr" hidden>Merci de remplir votre nom, votre téléphone et votre projet.</p>
+        <p class="err" id="customErr" hidden>Merci d'indiquer votre nom, un numéro de téléphone valide (ex. 06 12 34 56 78) et votre projet.</p>
         <a class="btn" id="customSend" href="#" target="_blank" rel="noopener">Envoyer ma demande sur WhatsApp</a>
         <p class="small">Réponse par SMS ou e-mail sous 48 h.</p>
       </div>
@@ -490,7 +491,10 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); o
       'Retrait : ' + dayLabel(), 'Nom : ' + form.name.trim(), 'Téléphone : ' + form.phone.trim()].concat(form.email.trim() ? ['E-mail : ' + form.email.trim()] : [])
       .concat(form.comment.trim() ? ['Commentaire : ' + form.comment.trim()] : []).join('\n');
   }
-  const formOk = () => form.name.trim() && form.phone.trim();
+  const nameOk = n => n.trim().length >= 2;
+  // numéro français : 06 12 34 56 78, 0612345678, +33 6 12 34 56 78
+  const phoneOk = p => /^(?:(?:\+|00)33\s?|0)[1-9](?:[\s.-]?\d{2}){4}$/.test(p.trim());
+  const formOk = () => nameOk(form.name) && phoneOk(form.phone);
 
   function renderCart() {
     const root = $('#cartRoot');
@@ -532,20 +536,23 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); o
           <div class="fields">
             <div class="field"><label for="oDay">Jour de retrait</label>
               <select id="oDay">${days.map(o => `<option value="${esc(o)}" ${o === form.day ? 'selected' : ''}>${esc(o)}</option>`).join('')}<option value="urgent" ${form.day === 'urgent' ? 'selected' : ''}>Commande urgente (moins de 24 h)</option></select>
-              <span class="hint">Retraits le mardi et le samedi, commande au moins 24 h avant. Pour une commande urgente, je te confirme sur WhatsApp si c'est possible.</span>
+              <div class="notice"><strong>Retraits uniquement le mardi et le samedi</strong>Commande au moins 24 h avant le retrait. Urgent ? Choisis « Commande urgente », je te confirme sur WhatsApp si c'est possible.</div>
             </div>
-            <div class="field"><label for="oName">Nom complet</label><input id="oName" autocomplete="name" value="${esc(form.name)}" class="${showErrors && !form.name.trim() ? 'invalid' : ''}"></div>
-            <div class="field"><label for="oPhone">Téléphone</label><input id="oPhone" type="tel" autocomplete="tel" value="${esc(form.phone)}" class="${showErrors && !form.phone.trim() ? 'invalid' : ''}"></div>
+            <div class="field"><label for="oName">Nom complet *</label><input id="oName" autocomplete="name" required value="${esc(form.name)}" class="${showErrors && !nameOk(form.name) ? 'invalid' : ''}"></div>
+            <div class="field"><label for="oPhone">Téléphone *</label><input id="oPhone" type="tel" autocomplete="tel" required placeholder="06 12 34 56 78" value="${esc(form.phone)}" class="${showErrors && !phoneOk(form.phone) ? 'invalid' : ''}"></div>
             <div class="field"><label for="oEmail">E-mail (facultatif)</label><input id="oEmail" type="email" autocomplete="email" value="${esc(form.email)}"></div>
             <div class="field"><label for="oComment">Commentaire (facultatif)</label><textarea id="oComment" style="min-height:80px">${esc(form.comment)}</textarea></div>
           </div>
           <div class="pay-box">
-            <strong>Pour que votre commande soit validée, merci de régler ${fmt(total)} par PayPal.</strong>
-            <p>Indiquez votre nom dans le message du paiement. Les informations de retrait vous seront envoyées par SMS.</p>
-            <a class="btn btn-sm" style="padding:.7rem 1rem" href="${PAYPAL}/${total.toFixed(2)}EUR" target="_blank" rel="noopener">Payer avec PayPal</a>
+            <strong>Pour valider ta commande, règle ${fmt(total)} par PayPal ou Wero au <span style="white-space:nowrap">06 15 88 83 68</span></strong>
+            <p><b>PayPal</b> : choisis l'option « Entre proches ».<br><b>Wero</b> : envoie le paiement à ce numéro depuis ton appli bancaire.<br>Indique ton nom dans le message du paiement. Les infos de retrait te seront envoyées par SMS.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+              <button type="button" class="btn btn-sm btn-dark" id="copyNum" style="padding:.7rem 1rem;flex:1">Copier le numéro</button>
+              <a class="btn btn-sm" style="padding:.7rem 1rem;flex:1" href="${PAYPAL}/${total.toFixed(2)}EUR" target="_blank" rel="noopener">Payer avec PayPal</a>
+            </div>
           </div>
           <div class="form-foot">
-            <p class="err" id="orderErr" ${showErrors && !formOk() ? '' : 'hidden'}>Indique ton nom et ton téléphone pour valider la commande.</p>
+            <p class="err" id="orderErr" ${showErrors && !formOk() ? '' : 'hidden'}>Indique ton nom et un numéro de téléphone valide (ex. 06 12 34 56 78) pour valider la commande.</p>
             <a class="btn" id="orderSend" href="${waLink(orderMessage())}" target="_blank" rel="noopener">Valider la commande · ${fmt(total)}</a>
             <p class="small">La commande s'envoie sur WhatsApp au 06 15 88 83 68.</p>
           </div>
@@ -555,11 +562,17 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); o
   $('#cartRoot').addEventListener('click', e => {
     const s = e.target.closest('[data-line]');
     if (s) { const l = cart[+s.dataset.line]; l.qty = Math.max(1, l.qty + +s.dataset.d); save(); renderCart(); return; }
+    if (e.target.closest('#copyNum')) {
+      const num = '0615888368';
+      Promise.resolve().then(() => navigator.clipboard.writeText(num))
+        .then(() => toast('Numéro copié : 06 15 88 83 68'), () => toast('Numéro : 06 15 88 83 68'));
+      return;
+    }
     const d = e.target.closest('[data-del]');
     if (d) { cart.splice(+d.dataset.del, 1); save(); renderCart(); return; }
     const send = e.target.closest('#orderSend');
     if (send) {
-      if (!formOk()) { e.preventDefault(); showErrors = true; renderCart(); $('#oName').focus(); return; }
+      if (!formOk()) { e.preventDefault(); showErrors = true; renderCart(); $(nameOk(form.name) ? '#oPhone' : '#oName').focus(); return; }
       // on laisse le lien s'ouvrir, puis on vide le panier
       setTimeout(() => { cart = []; save(); sent = true; showErrors = false; renderCart(); window.scrollTo(0, 0); }, 300);
     }
@@ -568,7 +581,8 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); o
     const map = { oDay: 'day', oName: 'name', oPhone: 'phone', oEmail: 'email', oComment: 'comment' };
     const k = map[e.target.id]; if (!k) return;
     form[k] = e.target.value;
-    e.target.classList.remove('invalid');
+    if (k === 'name') e.target.classList.toggle('invalid', showErrors && !nameOk(form.name));
+    if (k === 'phone') e.target.classList.toggle('invalid', showErrors && !phoneOk(form.phone));
     const a = $('#orderSend'); if (a) a.href = waLink(orderMessage());
     if (formOk()) { const er = $('#orderErr'); if (er) er.hidden = true; }
   };
@@ -587,16 +601,18 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--caramel); o
     rows.push('', 'Projet : ' + cf('cProject'));
     return rows.join('\n');
   }
-  const customOk = () => cf('cName') && cf('cPhone') && cf('cProject');
+  const cValid = id => id === 'cPhone' ? phoneOk(cf(id)) : id === 'cName' ? nameOk(cf(id)) : !!cf(id);
+  const customOk = () => ['cName', 'cPhone', 'cProject'].every(cValid);
   $('#customForm').addEventListener('input', () => {
     $('#customSend').href = waLink(customMessage());
     if (customOk()) $('#customErr').hidden = true;
-    ['cName', 'cPhone', 'cProject'].forEach(id => { if (cf(id)) $('#' + id).classList.remove('invalid'); });
+    ['cName', 'cPhone', 'cProject'].forEach(id => { if (cValid(id)) $('#' + id).classList.remove('invalid'); });
   });
   $('#customSend').addEventListener('click', e => {
     if (!customOk()) {
       e.preventDefault(); $('#customErr').hidden = false;
-      ['cName', 'cPhone', 'cProject'].forEach(id => $('#' + id).classList.toggle('invalid', !cf(id)));
+      ['cName', 'cPhone', 'cProject'].forEach(id => $('#' + id).classList.toggle('invalid', !cValid(id)));
+      $('#' + ['cName', 'cPhone', 'cProject'].find(id => !cValid(id))).focus();
       return;
     }
     $('#customSend').href = waLink(customMessage());
